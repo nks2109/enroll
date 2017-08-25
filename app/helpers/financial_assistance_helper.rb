@@ -16,7 +16,7 @@ module FinancialAssistanceHelper
     application = FinancialAssistance::Application.find(application_id)
     total_aptc = Money.new(0)
     application.tax_households.each do |thh|
-      total_aptc =  total_aptc + thh.preferred_eligibility_determination.max_aptc
+      total_aptc =  0.0 # total_aptc + thh.preferred_eligibility_determination.max_aptc
     end
     total_aptc
   end
