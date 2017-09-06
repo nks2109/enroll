@@ -137,7 +137,6 @@ class Insured::PlanShoppingsController < ApplicationController
       notify_employer_when_employee_terminate_coverage(hbx_enrollment)
       
       redirect_to family_account_path
-      return
     else
       redirect_to :back
     end
