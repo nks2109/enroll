@@ -133,6 +133,7 @@ class EmployerProfile
     end
     broker_agency_accounts.build(broker_agency_profile: new_broker_agency, writing_agent_id: broker_role_id, start_on: start_on)
     @broker_agency_profile = new_broker_agency
+    #trigger_notices("general_agency_hired") unless @broker_agency_profile.default_general_agency_profile_id.nil?
   end
 
   def fire_broker_agency(terminate_on = today)
@@ -141,6 +142,7 @@ class EmployerProfile
     active_broker_agency_account.is_active = false
     active_broker_agency_account.save!
     notify_broker_terminated
+    # trigger_notices("general_agency_fired") unless active_broker_agency_account.broker_agency_profile.default_general_agency_profile_id.nil?
   end
 
   alias_method :broker_agency_profile=, :hire_broker_agency
@@ -215,6 +217,7 @@ class EmployerProfile
     return if active_general_agency_account.blank?
     general_agency_accounts.active.update_all(aasm_state: "inactive", end_on: terminate_on)
     notify_general_agent_terminated
+    # trigger_notices("general_agency_fired")
   end
   alias_method :general_agency_profile=, :hire_general_agency
 
@@ -263,8 +266,8 @@ class EmployerProfile
 
   def active_and_renewing_published
     result = []
-    result <<active_plan_year  if active_plan_year.present? 
-    result <<renewing_published_plan_year  if renewing_published_plan_year.present? 
+    result << active_plan_year  if active_plan_year.present?
+    result << renewing_published_plan_year  if renewing_published_plan_year.present?
     result
   end
 

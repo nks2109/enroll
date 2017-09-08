@@ -209,6 +209,10 @@ class BrokerAgencies::ProfilesController < ApplicationController
         @broker_agency_profile.default_general_agency_profile = @general_agency_profile
       end
       @broker_agency_profile.save
+
+      # trigger_notices("general_agency_hired") if params[:type] != 'clear' && EmployerProfile.find_by_broker_agency_profile(@broker_agency_profile).present?
+      # trigger_notices("general_agency_fired") if params[:type] == 'clear' && EmployerProfile.find_by_broker_agency_profile(@broker_agency_profile).present?
+
       #update_ga_for_employers(@broker_agency_profile, old_default_ga)
       notify("acapi.info.events.broker.default_ga_changed", {:broker_id => @broker_agency_profile.primary_broker_role.hbx_id, :pre_default_ga_id => old_default_ga_id})
       @notice = "Changing default general agencies may take a few minutes to update all employers."
@@ -314,6 +318,7 @@ class BrokerAgencies::ProfilesController < ApplicationController
             send_general_agency_assign_msg(general_agency_profile, employer_profile, 'Hire')
           end
         end
+        #trigger_notices("general_agency_hired") if params[:employer_ids].present?
         flash.now[:notice] ="Assign successful."
         if params["from_assign"] == "true"
           assign # calling this method as the latest copy of objects are needed.
