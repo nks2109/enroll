@@ -3,6 +3,7 @@ class Exchanges::HbxProfilesController < ApplicationController
   include DataTablesSearch
   include Pundit
   include SepAll
+  include ApplicationHelper
 
   before_action :modify_admin_tabs?, only: [:binder_paid, :transmit_group_xml]
   before_action :check_hbx_staff_role, except: [:request_help, :show, :assister_index, :family_index, :update_cancel_enrollment, :update_terminate_enrollment]
@@ -26,6 +27,7 @@ class Exchanges::HbxProfilesController < ApplicationController
         EmployerProfile.update_status_to_binder_paid(params[:ids])
         flash["notice"] = "Successfully submitted the selected employer(s) for binder paid."
         render json: { status: 200, message: 'Successfully submitted the selected employer(s) for binder paid.' }
+        initial_employee_plan_selection_confirmation(params[:ids])
       rescue => e
         render json: { status: 500, message: 'An error occured while submitting employer(s) for binder paid.' }
       end
