@@ -19,6 +19,7 @@ module PdfTemplates
     attribute :to, String
     attribute :plan, PdfTemplates::Plan
     attribute :plan_year, PdfTemplates::PlanYear
+    attribute :employee_email, String
 
     def shop?
       return true
