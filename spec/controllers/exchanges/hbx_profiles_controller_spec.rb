@@ -46,8 +46,8 @@ RSpec.describe Exchanges::HbxProfilesController, dbclean: :after_each do
     let(:person) { double("person")}
     let(:hbx_profile) { double("HbxProfile") }
     let(:hbx_staff_role) { double("hbx_staff_role", permission: FactoryGirl.create(:permission))}
-    let(:employer_profile){ FactoryGirl.create(:employer_profile, aasm_state: "enrolling") }
-
+    let(:employer_profile) { create(:employer_with_planyear, plan_year_state: 'active', aasm_state: "enrolling", start_on: start_on)}
+ 
     before(:each) do
       allow(user).to receive(:has_role?).with(:hbx_staff).and_return true
       allow(user).to receive(:person).and_return(person)
@@ -68,6 +68,16 @@ RSpec.describe Exchanges::HbxProfilesController, dbclean: :after_each do
       expect(response).to render_template("exchanges/hbx_profiles/binder_index_datatable")
     end
 
+
+    it "should receive binder_paid action" do
+      census_employee.active_benefit_group_assignment.update_attributes(hbx_enrollment_id: hbx_enrollment.id)
+      hbx_enrollment.save!
+      xhr :get, :binder_paid, ids: [organization.id]
+      organization.reload
+      expect(controller).to receive(:initial_employee_plan_selection_confirmation)
+      expect(organization.employer_profile.aasm_state).to eq "binder_paid"
+      expect(flash["notice"]).to match(/Successfully submitted the selected/)
+    end
   end
 
   describe "new" do
