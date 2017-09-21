@@ -85,7 +85,8 @@ module Subscribers
           death_confirmation: data[:death_confirmation],
           ssn_verified: data[:ssn_verified],
           citizenship_verified: data[:citizenship_verified],
-          incarcerated: data[:incarcerated]
+          incarcerated: data[:incarcerated],
+          individual: data[:individual]
           
         )
     end  

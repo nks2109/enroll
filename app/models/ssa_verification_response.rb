@@ -9,6 +9,7 @@
     field :death_confirmation, type: String
     field :citizenship_verified, type: String
     field :incarcerated, type: String
+    field :individual, type: Hash 
     
     embedded_in :lawful_presence_determination
 

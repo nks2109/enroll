@@ -49,6 +49,7 @@ describe Subscribers::SsaVerification do
         expect(person.consumer_role.lawful_presence_determination.ssa_verification_responses.first.ssn_verified).to eq(xml_hash[:ssn_verified])
         expect(person.consumer_role.lawful_presence_determination.ssa_verification_responses.first.citizenship_verified).to eq(xml_hash[:citizenship_verified])
         expect(person.consumer_role.lawful_presence_determination.ssa_verification_responses.first.incarcerated).to eq(xml_hash[:incarcerated])
+        expect(person.consumer_role.lawful_presence_determination.ssa_verification_responses.first.individual).to eq(xml_hash[:individual])
       end
     end
   
