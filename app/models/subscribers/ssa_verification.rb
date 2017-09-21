@@ -35,7 +35,7 @@ module Subscribers
         end
 
         xml_hash = xml_to_hash(xml)
-
+        save_ssa_verification_responses(xml_hash,consumer_role)
         update_consumer_role(consumer_role, xml_hash)
       rescue => e
         notify("acapi.error.application.enroll.remote_listener.ssa_responses", {
@@ -75,5 +75,19 @@ module Subscribers
     def find_person(person_hbx_id)
       Person.where(hbx_id:person_hbx_id).first
     end
+
+    def save_ssa_verification_responses(data,consumer_role)
+     consumer_role.lawful_presence_determination.ssa_verification_responses << 
+      SsaVerificationResponse.new(
+          response_code: data[:response_code],
+          response_text: data[:response_text],
+          ssn_verification_failed: data[:ssn_verification_failed],
+          death_confirmation: data[:death_confirmation],
+          ssn_verified: data[:ssn_verified],
+          citizenship_verified: data[:citizenship_verified],
+          incarcerated: data[:incarcerated]
+          
+        )
+    end  
   end
 end

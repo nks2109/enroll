@@ -36,8 +36,22 @@ describe Subscribers::SsaVerification do
         expect(person.consumer_role.lawful_presence_determination.ssa_responses.count).to eq(1)
         expect(person.consumer_role.lawful_presence_determination.ssa_responses.first.body).to eq(payload[:body])
       end
+      
+      it "should create ssa verification response record" do
+        allow(subject).to receive(:xml_to_hash).with(xml).and_return(xml_hash)
+        allow(subject).to receive(:find_person).with(individual_id).and_return(person)
+        subject.call(nil, nil, nil, nil, payload)
+        expect(person.consumer_role.lawful_presence_determination.ssa_verification_responses.count).to eq(1)
+        expect(person.consumer_role.lawful_presence_determination.ssa_verification_responses.first.response_code).to eq(xml_hash[:response_code])
+        expect(person.consumer_role.lawful_presence_determination.ssa_verification_responses.first.response_text).to eq(xml_hash[:response_text])
+        expect(person.consumer_role.lawful_presence_determination.ssa_verification_responses.first.ssn_verification_failed).to eq(xml_hash[:ssn_verification_failed])
+        expect(person.consumer_role.lawful_presence_determination.ssa_verification_responses.first.death_confirmation).to eq(xml_hash[:death_confirmation])
+        expect(person.consumer_role.lawful_presence_determination.ssa_verification_responses.first.ssn_verified).to eq(xml_hash[:ssn_verified])
+        expect(person.consumer_role.lawful_presence_determination.ssa_verification_responses.first.citizenship_verified).to eq(xml_hash[:citizenship_verified])
+        expect(person.consumer_role.lawful_presence_determination.ssa_verification_responses.first.incarcerated).to eq(xml_hash[:incarcerated])
+      end
     end
-
+  
     context "ssn_verified and citizenship_verified=false" do
       it "should approve lawful presence and set citizen_status to not_lawfully_present_in_us" do
         allow(subject).to receive(:xml_to_hash).with(xml).and_return(xml_hash3)
