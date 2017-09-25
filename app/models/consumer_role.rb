@@ -7,6 +7,7 @@ class ConsumerRole
   include Acapi::Notifiers
   include AASM
   include Mongoid::Attributes::Dynamic
+  include Mongoid::History::Trackable
   include StateTransitionPublisher
 
   embedded_in :person
@@ -135,6 +136,8 @@ class ConsumerRole
   after_initialize :setup_lawful_determination_instance
 
   before_validation :ensure_validation_states, on: [:create, :update]
+
+  track_history   :on => [:fields], :scope => :person
 
   def ivl_coverage_selected
     if unverified?
