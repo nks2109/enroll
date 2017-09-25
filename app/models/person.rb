@@ -4,7 +4,6 @@ class Person
   include Mongoid::Timestamps
   include Mongoid::Versioning
   include Mongoid::History::Trackable
-  include Mongoid::Attributes::Dynamic
 
   include Notify
   include UnsetableSparseFields
