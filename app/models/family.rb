@@ -57,7 +57,7 @@ class Family
   accepts_nested_attributes_for :special_enrollment_periods, :family_members, :irs_groups,
                                 :households, :broker_agency_accounts, :general_agency_accounts
 
-   track_history   :on => [:hbx_assigned_id, :is_active, :hbx_assigned_id, :person_id], :scope => :person
+   track_history   :on => [:hbx_assigned_id, :is_active, :person_id], :scope => :person
   # index({hbx_assigned_id: 1}, {unique: true})
   index({e_case_id: 1}, { sparse: true })
   index({submitted_at: 1})

@@ -137,7 +137,7 @@ class ConsumerRole
 
   before_validation :ensure_validation_states, on: [:create, :update]
 
-  track_history   :on => [:fields], :scope => :person
+  track_history   :on => [:requested_coverage_start_date, :aasm_state, :is_state_resident, :residency_determined_at, :is_applicant, :birth_location, :marital_status, :is_active, :contact_method, :ssn_validation, :native_validation, :ssn_update_reason, :lawful_presence_update_reason , :native_update_reason, :is_applying_coverage], :scope => :person
 
   def ivl_coverage_selected
     if unverified?
