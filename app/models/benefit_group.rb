@@ -142,6 +142,7 @@ class BenefitGroup
   end
 
   def termination_effective_on_for(new_date)
+    Rails.logger.info "plan_year: #{plan_year}"
     if plan_year.open_enrollment_contains?(new_date) || new_date < plan_year.start_on
       plan_year.start_on
     else

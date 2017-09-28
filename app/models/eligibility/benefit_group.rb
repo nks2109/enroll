@@ -40,11 +40,13 @@ module Eligibility
     end
 
     def first_of_month_effective_on_for(date_of_hire)
+       Rails.logger.info "employer_profile: #{employer_profile}"
       [valid_plan_year.start_on, eligible_on(date_of_hire)].max
     end
 
     ## Conversion employees are not allowed to buy coverage through off-exchange plan year
-    def valid_plan_year    
+    def valid_plan_year
+
       if employer_profile.is_conversion?
         plan_year.is_conversion ? plan_year.employer_profile.renewing_plan_year : plan_year
       else

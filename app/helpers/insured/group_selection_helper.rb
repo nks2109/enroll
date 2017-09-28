@@ -24,6 +24,7 @@ module Insured
     end
 
     def dental_relationship_benefits(employee_role)
+      Rails.logger.info "renewal_published_benefit_group: #{renewal_published_benefit_group}"
       benefit_group = employee_role.census_employee.renewal_published_benefit_group || employee_role.census_employee.active_benefit_group
       if benefit_group.present?
         benefit_group.dental_relationship_benefits.select(&:offered).map(&:relationship)
