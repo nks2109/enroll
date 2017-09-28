@@ -988,6 +988,10 @@ class Family
    end
   end 
 
+  def self.min_verification_due_date_range(start_date,end_date)
+    where(min_verification_due_date_range: start_date..end_date)
+  end
+
 private
   def build_household
     if households.size == 0
