@@ -23,7 +23,7 @@
     while offset < org_count
       Organization.offset(offset).limit(batch_size).where("employer_profile" => {"$exists" => true}).map(&:employer_profile).each do |employer|
         employer.broker_agency_accounts.unscoped.all.each do |ba_account|
-          next if  (ba_account.nil? || ba_account.broker_agency_profile.nil?) || ba_account.created_at >= Date.new(2016,1,1) ||  ba_account.broker_agency_profile.market_kind == "individual"
+          next if (ba_account.nil? || ba_account.broker_agency_profile.nil?) || ba_account.broker_agency_profile.primary_broker_role.nil? ||  ba_account.broker_agency_profile.market_kind == "individual"
           csv << [
             employer.legal_name,
             employer.fein,
