@@ -42,10 +42,24 @@ module Insured
 
     def select_market(person, params)
       return params[:market_kind] if params[:market_kind].present?
-      if @person.try(:has_active_employee_role?)
+      if params[:qle_id].present? && (!person.has_active_resident_role?)
+        qle = QualifyingLifeEventKind.find(params[:qle_id])
+        return qle.market_kind
+      end
+      if person.has_active_employee_role?
         'shop'
-      elsif @person.try(:has_active_consumer_role?)
+      elsif person.has_active_consumer_role? && !person.has_active_resident_role?
         'individual'
+      elsif person.has_active_resident_role?
+        'coverall'
+      else
+        nil
+      end
+    end
+
+    def select_benefit_group(qle)
+      if @market_kind == "shop"
+        @employee_role.present? ? @employee_role.benefit_group(qle: qle) : nil
       else
         nil
       end
@@ -135,12 +149,18 @@ module Insured
       end
     end
 
-    def is_eligible_for_dental?(employee_role, change_plan)
+    def is_eligible_for_dental?(employee_role, change_plan, enrollment)
       renewing_bg = employee_role.census_employee.renewal_published_benefit_group
       active_bg = employee_role.census_employee.active_benefit_group
 
       if change_plan != "change_by_qle"
-        ( renewing_bg || active_bg ).present? && (renewing_bg || active_bg ).is_offering_dental?
+        if change_plan == "change_plan" && enrollment.present?
+          enrollment.benefit_group.is_offering_dental?
+        elsif employee_role.can_enroll_as_new_hire?
+          active_bg.present? && active_bg.is_offering_dental?
+        else
+          ( renewing_bg || active_bg ).present? && (renewing_bg || active_bg ).is_offering_dental?
+        end
       else
         effective_on = employee_role.person.primary_family.current_sep.effective_on
 
