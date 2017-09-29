@@ -982,12 +982,6 @@ class Family
     end
   end
   
-  def self.update_vlp_documents_status
-    Family.each do |f|
-      f.update_attributes(vlp_documents_status: f.primary_applicant.person.vlp_documents_status) if f.primary_applicant.person.consumer_role
-   end
-  end 
-
   def self.min_verification_due_date_range(start_date,end_date)
     where(min_verification_due_date_range: start_date..end_date)
   end
